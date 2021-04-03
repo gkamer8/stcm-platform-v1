@@ -1,0 +1,12 @@
+#top-bit{
+    display: block;
+    height: 200px;
+    width: 100%;
+    background-color: #f0f0f0;
+    text-align: center;
+}
+#search-bar-container{
+    display: block;
+    width:100%;
+    text-align: center;
+}
