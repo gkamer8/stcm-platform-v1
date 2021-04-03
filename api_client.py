@@ -7,7 +7,7 @@ import requests
 Current API is from polygon.io
 Account is the stcm email with TD Ameritrade password
 
-Api key is stored in api_key.txt by default.
+Api key is stored in api_key.txt by default. (You have to make this yourself)
 
 This client is made to be the only part of the code that depends on Polygon.io.
 If we ever wanted to switch in the future, the functions that are here should be preserved,
