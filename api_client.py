@@ -1,5 +1,6 @@
 import json
 import requests
+import os
 
 
 """
@@ -50,17 +51,25 @@ class APIClient():
     # By default, the file is the same name as the function
     def write(self, func, *args, **kwargs):
         res = func(*args, **kwargs)
-        with open('data/' + func.__name__ + ".json", 'w') as fhand:
+        path = os.path.join('data', func.__name__ + '.json')
+        with open(path, 'w') as fhand:
             json.dump(res, fhand)
     
     # Same as write except takes a result instead of a function
     # Data folder path is already included along with .json
     def write_res(self, res, outfile):
-        with open('data/' + outfile + ".json", 'w') as fhand:
+        path = os.path.join('data', outfile + '.json')
+        with open(path, 'w') as fhand:
             json.dump(res, fhand)
     
     # Returns list of all stock tickers
-    def get_all_stock_tickers(self, max_tick=1e10):
+    # use_cache determines whether to call the api or go to /data
+    def get_all_stock_tickers(self, max_tick=1e10, use_cache=False):
+
+        if use_cache:
+            path = os.path.join('data', 'get_all_stock_tickers.json')
+            return json.load(open(path))
+
         page = 1
         path = "/v2/reference/tickers"
         perpage = 1000
@@ -84,14 +93,8 @@ class APIClient():
         return ticker_list
 
     # Returns true if the ticker is an actual stock ticker
-    # use_cache determines whether to call get_all_stock_tickers or go to /data
     def is_a_stock_ticker(self, ticker, use_cache=True):
-        
-        if use_cache:
-            all_tickers = json.load(open('data/get_all_stock_tickers.json','r'))
-        else:
-            all_tickers = self.get_all_stock_tickers()
-        
+        all_tickers = self.get_all_stock_tickers(use_cache=use_cache)
         return ticker.upper() in all_tickers
     
     # Searches the API for a ticker
