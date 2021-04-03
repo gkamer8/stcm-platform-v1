@@ -7,4 +7,4 @@ def root():
     return 'Bruh bruh bruh'
 
 if __name__ == '__main__':
-    app.run();
+    app.run()
