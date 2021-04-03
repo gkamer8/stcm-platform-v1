@@ -51,12 +51,11 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    # a simple page that says hello
     @app.route('/')
     def root():
         return 'Bruh bruh bruh'
     
-    #/lookup
+    # /lookup
     from . import lookup
     app.register_blueprint(lookup.bp)
 
