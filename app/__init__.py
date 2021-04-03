@@ -56,6 +56,7 @@ def create_app(test_config=None):
     def root():
         return 'Bruh bruh b ruh'
     
+    # /lookup
     from . import lookup
     app.register_blueprint(lookup.bp)
 
