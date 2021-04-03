@@ -60,9 +60,8 @@ class APIClient():
             json.dump(res, fhand)
     
     # Returns list of all stock tickers
-    def get_all_stock_tickers(self, bruh, max_tick=1e10):
+    def get_all_stock_tickers(self, max_tick=1e10):
         page = 1
-        print(bruh)
         path = "/v2/reference/tickers"
         perpage = 1000
         args = {
@@ -83,6 +82,17 @@ class APIClient():
             args['page'] = page
         
         return ticker_list
+
+    # Returns true if the ticker is an actual stock ticker
+    # use_cache determines whether to call get_all_stock_tickers or go to /data
+    def is_a_stock_ticker(self, ticker, use_cache=True):
+        
+        if use_cache:
+            all_tickers = json.load(open('data/get_all_stock_tickers.json','r'))
+        else:
+            all_tickers = self.get_all_stock_tickers()
+        
+        return ticker.upper() in all_tickers
     
 
 if __name__ == '__main__':
