@@ -1,13 +1,14 @@
-from flask import Flask, render_template, request
+import functools
+
+from flask import (
+    Blueprint, flash, g, redirect, render_template, request, session, url_for
+)
+
 from api_client import APIClient
 
-app = Flask(__name__)
+bp = Blueprint('auth', __name__, url_prefix='/lookup')
 
-@app.route('/')
-def root():
-    return 'Bruh bruh bruh'
-
-@app.route('/lookup', methods=('GET', 'POST'))
+@bp.route('/', methods=('GET', 'POST'))
 def lookup():
 
     # On search: 
@@ -23,6 +24,3 @@ def lookup():
             return str(client.seach_for_ticker(search, max_tick=1000))
 
     return render_template('lookup.html')
-
-if __name__ == '__main__':
-    app.run()
