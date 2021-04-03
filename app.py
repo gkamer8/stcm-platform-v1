@@ -20,7 +20,7 @@ def lookup():
         if is_stock:
             return "'tis a stock"
         else:
-            return "'tis not a stock"
+            return str(client.seach_for_ticker(search, max_tick=1000))
 
     return render_template('lookup.html')
 

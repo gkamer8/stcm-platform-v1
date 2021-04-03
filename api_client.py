@@ -94,6 +94,36 @@ class APIClient():
         
         return ticker.upper() in all_tickers
     
+    # Searches the API for a ticker
+    # Returns list of dictionaries with ticker, name, and exchange
+    def seach_for_ticker(self, search, max_tick=1e10, start_page=1):
+        page = start_page
+        path = "/v2/reference/tickers"
+        perpage = 1000
+        args = {
+            'page': page,
+            'perpage': perpage,
+            'sort': 'ticker',
+            'search': search,
+        }
+        result_list = []
+        while True:
+            res = query(self.makeUrl(path, args))
+            count = res['count']
+            
+            result_list.extend([
+                                {
+                                    'ticker': x['ticker'],
+                                    'name': x['name'],
+                                    'exchange': x['primaryExch']
+                                } for x in res['tickers']])
+            
+            if count <= perpage * page or max_tick <= perpage * page:
+                break
+            page += 1
+            args['page'] = page
+        
+        return result_list
 
 if __name__ == '__main__':
     if DEBUG:
