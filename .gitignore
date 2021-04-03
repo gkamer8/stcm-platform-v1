@@ -1,0 +1,18 @@
+
+# local env files
+.api_key.txt
+
+__pycache__/
+
+.env*
+!.env.example
+
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
