@@ -1,0 +1,13 @@
+body{
+    margin: 0px;
+}
+nav{
+    display: block;
+    background-color: #A51C30;
+    width: 100%;
+    margin: 0px;
+    padding: 5px;
+    height: 40px;
+    color: white;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
