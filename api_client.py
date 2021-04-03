@@ -17,15 +17,19 @@ and makeUrl())
 
 """
 
+DEBUG = True  # Prints out things in certain functions
+
 BASE_URL = 'https://api.polygon.io'
 
 # Returns object from json load of request of url
 def query(url):
-    print(url)
+    if DEBUG:
+        print('Querying: ' + url)
     req = requests.get(url)
     return json.loads(req.text)
 
-class ApiClient():
+
+class APIClient():
 
     def __init__(self, api_key_file='api_key.txt'):
         
@@ -42,9 +46,23 @@ class ApiClient():
             path += "&" + str(arg) + "=" + str(args[arg])
         return path
     
+    # Saves the results of a function call into a file
+    # By default, the file is the same name as the function
+    def write(self, func, *args, **kwargs):
+        res = func(*args, **kwargs)
+        with open('data/' + func.__name__ + ".json", 'w') as fhand:
+            json.dump(res, fhand)
+    
+    # Same as write except takes a result instead of a function
+    # Data folder path is already included along with .json
+    def write_res(self, res, outfile):
+        with open('data/' + outfile + ".json", 'w') as fhand:
+            json.dump(res, fhand)
+    
     # Returns list of all stock tickers
-    def get_all_stock_tickers(self):
+    def get_all_stock_tickers(self, bruh, max_tick=1e10):
         page = 1
+        print(bruh)
         path = "/v2/reference/tickers"
         perpage = 1000
         args = {
@@ -59,7 +77,7 @@ class ApiClient():
             
             ticker_list.extend([x['ticker'] for x in res['tickers']])
             
-            if count <= perpage * page:
+            if count <= perpage * page or max_tick <= perpage * page:
                 break
             page += 1
             args['page'] = page
@@ -67,12 +85,11 @@ class ApiClient():
         return ticker_list
     
 
-
 if __name__ == '__main__':
     # For testing
-    my_client = ApiClient()
-    ticks = my_client.get_all_stock_tickers()
+    my_client = APIClient()
+    # ticks = my_client.get_all_stock_tickers(max_tick=2000)
 
-    print(ticks[:10])
+    my_client.write(my_client.get_all_stock_tickers, max_tick=2000)
 
-    print(ticks[-10:])
+    
