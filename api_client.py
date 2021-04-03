@@ -131,6 +131,6 @@ if __name__ == '__main__':
         my_client = APIClient()
         # ticks = my_client.get_all_stock_tickers(max_tick=2000)
 
-        my_client.write(my_client.get_all_stock_tickers, max_tick=2000)
+        # my_client.write(my_client.get_all_stock_tickers)
 
     
