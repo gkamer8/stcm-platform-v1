@@ -17,7 +17,7 @@ and makeUrl())
 
 """
 
-DEBUG = True  # Prints out things in certain functions
+DEBUG = True  # Prints out things in certain functions and runs from main
 
 BASE_URL = 'https://api.polygon.io'
 
@@ -86,10 +86,11 @@ class APIClient():
     
 
 if __name__ == '__main__':
-    # For testing
-    my_client = APIClient()
-    # ticks = my_client.get_all_stock_tickers(max_tick=2000)
+    if DEBUG:
+        # For testing
+        my_client = APIClient()
+        # ticks = my_client.get_all_stock_tickers(max_tick=2000)
 
-    my_client.write(my_client.get_all_stock_tickers, max_tick=2000)
+        my_client.write(my_client.get_all_stock_tickers, max_tick=2000)
 
     
