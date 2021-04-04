@@ -28,7 +28,10 @@ export default {
         greeting: 'Hello, Vue!',
         flaskGreeting: ''
     }
-},
+  },
+  created() {
+    document.title = "STCM";
+  }
 // created: async function(){
 //         const gResponse = await fetch("http://127.0.0.1:5000/lookup?stock=App");
 //         const gObject = await gResponse.json();
