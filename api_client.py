@@ -102,10 +102,12 @@ class APIClient():
 
         return ticker_list
 
-    def get_relevant_stock_tickers(self, ticker, use_cache=True):
+    # Returns first max_tick tickers that match substring ticker
+    def get_relevant_stock_tickers(self, ticker, use_cache=True, max_tick=20):
+        ticker = ticker.upper()
         all_tickers = self.get_all_stock_tickers(use_cache=use_cache)
         lng = len(ticker)
-        return [x for x in all_tickers if x[:lng] == ticker][:20]
+        return [x for x in all_tickers if x[:lng] == ticker][:max_tick]
 
     # Returns true if the ticker is an actual stock ticker
     def is_a_stock_ticker(self, ticker, use_cache=True):
@@ -114,7 +116,7 @@ class APIClient():
     
     # Searches the API for a ticker using a company name
     # Returns list of dictionaries with ticker, name, and exchange
-    def seach_for_ticker(self, search, max_tick=1e10, start_page=1):
+    def seach_for_ticker(self, search, max_tick=None, start_page=1):
         page = start_page
         path = "/v2/reference/tickers"
         perpage = 1000
@@ -145,26 +147,43 @@ class APIClient():
             page += 1
             args['page'] = page
 
-        return result_list
+        return result_list if max_tick is None else result_list[:max_tick]
 
     # Returns relevant details about a company/entity from its ticker from the API
-    # logo, country, industry, sector, url, description, name, symbol, tags, similar
+    # logo, country, exchange, industry, sector, url, description, name, symbol, tags, similar
     def get_ticker_details(self, ticker):
-        path = "v1/meta/symbols/" + ticker.upper() + "/company"
+        path = "/v1/meta/symbols/" + ticker.upper() + "/company"
         args = {}
         res = query(self.makeUrl(path, args))
-        new_res = {
-            'logo': res['logo'],
-            'country': res['country'],
-            'industry': res['industry'],
-            'sector': res['sector'],
-            'url': res['url'],
-            'description': res['description'],
-            'name': res['name'],
-            'symbol': res['symbol'],
-            'tags': res['tags'],
-            'similar': res['similar']
-        }
+        try:
+            new_res = {
+                'logo': res['logo'],
+                'country': res['country'],
+                'exchange': res['exchange'],
+                'industry': res['industry'],
+                'sector': res['sector'],
+                'url': res['url'],
+                'description': res['description'],
+                'name': res['name'],
+                'symbol': res['symbol'],
+                'tags': res['tags'],
+                'similar': res['similar']
+            }
+        except:
+            print("Get ticker details: stock not found.")
+            new_res = {
+                'logo': "https://i.pinimg.com/736x/b4/42/b3/b442b3c2ac6ac0beffc9e554474a208c.jpg",  # Sad face
+                'country': "Nowhere",
+                'exchange': 'N-eye-zee',
+                'industry': "Nothing",
+                'sector': "Nothing",
+                'url': "http://nothing.com/",
+                'description': "This is not a company.",
+                'name': "Company Not Found",
+                'symbol': "PAIN",
+                'tags': ["Sadness", "Pain", "Error", "Not found"],
+                'similar': ["GME", "AMC", "BB"]
+            }
         return new_res
 
 

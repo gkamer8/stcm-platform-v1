@@ -1,4 +1,5 @@
 import os
+import json
 
 from flask import Flask
 from flask_cors import CORS
@@ -63,26 +64,10 @@ def create_app(test_config=None):
 
     @app.route('/')
     def root():
-        return 'Bruh bruh bruh'
+        return "We sail the ocean blue and our saucy ship's a beauty."
 
-    @app.route("/lookup")
-    def stockLookup():
-        from api_client import APIClient
-        data = request.args.get('stock')
-        client = APIClient()
-        data1 = str(client.seach_for_ticker(data, max_tick=1000)[0])
-        return {"data": data1}
-
-    @app.route("/stock-list-autocomplete")
-    def stockList():
-        from api_client import APIClient
-        data = request.args.get('stock')
-        client = APIClient()
-        list = client.get_relevant_stock_tickers(data)
-        return {"data": list}
-
-    # /lookup
-    # from . import lookup
-    # app.register_blueprint(lookup.bp)
+    # /lookup --> Handles searching for stocks
+    from . import lookup
+    app.register_blueprint(lookup.bp)
 
     return app

@@ -6,14 +6,13 @@
           <b-field>
               <b-loading :is-full-page="false" v-model="searching" :can-cancel="true"></b-loading>
           </b-field>
-
         </div>
         <br />
       </div>
       <div v-else-if="stockResponse">
         <b class="is-size-5">
-          {{stockResponse.name}}
-        </b><br /><br />
+          <img v-bind:src="stockResponse.logo" style="height:20px;vertical-align:middle"> {{stockResponse.name}}
+        </b><br />
         <div class="columns" style="width: 30%; margin: auto; text-align: left;">
           <div class="column is-4">
             <p>
@@ -23,19 +22,16 @@
               Exchange:
             </p>
           </div>
-          <div class="column is-5">
-
-          </div>
-          <div class="column" style="font-weight: bold;">
+          <div class="column" style="font-weight: bold;float:right;text-align:right">
             <p>
-              {{stockResponse.ticker}}
+              {{stockResponse.symbol}}
             </p><br />
             <p>
               {{stockResponse.exchange}}
             </p>
           </div>
-        <br />
-      </div>
+        </div>
+        <br/>
       </div>
 
       <div>
@@ -79,17 +75,17 @@ export default {
 methods: {
         async getStockData(stock) {
           this.searching = true
-          var url = 'http://127.0.0.1:5000/lookup?stock=' + stock
+          var url = 'http://127.0.0.1:5000/lookup/stock?stock=' + stock
           const gResponse = await fetch(url);
           const gObject = await gResponse.json();
-          this.stockResponse = JSON.parse(gObject.data);
+          this.stockResponse = gObject.data;
           this.searching = false
           console.log(this.stockResponse)
         },
         async getStockList() {
             this.isFetching = true
             this.lastSearched = this.value
-            var url = 'http://127.0.0.1:5000/stock-list-autocomplete?stock=' + this.value.toUpperCase()
+            var url = 'http://127.0.0.1:5000/lookup/autocomplete?stock=' + this.value
             const gResponse = await fetch(url);
             const gObject = await gResponse.json();
             console.log(gObject.data)
