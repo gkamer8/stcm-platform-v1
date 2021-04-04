@@ -30,7 +30,7 @@ def stockList():
 
     if len(tickers) <= 5:
         name_search = client.seach_for_ticker(stock, max_tick=20)
-        tickers.extend([x['ticker'] for x in name_search])
+        tickers.extend([x['ticker'] for x in name_search if x['ticker'] not in tickers])
 
     data = {'data': tickers}
     return json.dumps(data)
