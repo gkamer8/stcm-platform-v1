@@ -39,20 +39,20 @@ def query(url):
 class APIClient():
 
     def __init__(self, api_key_file='api_key.txt'):
-        
+
         # Get API key
 
         self.api_key = ''
         with open(api_key_file, 'r') as fhand:
             self.api_key = fhand.read().replace('\n', '')
-    
+
     # Makes request url from the path and a dictionary of arguments
     def makeUrl(self, path, args):
         path = BASE_URL + path + "?apiKey=" + self.api_key
         for arg in args:
             path += "&" + str(arg) + "=" + str(args[arg])
         return path
-    
+
     # Saves the results of a function call into a file
     # By default, the file is the same name as the function
     def write(self, func, *args, **kwargs):
@@ -60,14 +60,14 @@ class APIClient():
         path = os.path.join('data', func.__name__ + '.json')
         with open(path, 'w') as fhand:
             json.dump(res, fhand)
-    
+
     # Same as write except takes a result instead of a function
     # Data folder path is already included along with .json
     def write_res(self, res, outfile):
         path = os.path.join('data', outfile + '.json')
         with open(path, 'w') as fhand:
             json.dump(res, fhand)
-    
+
     # Returns list of all stock tickers
     # use_cache determines whether to call the api or go to /data
     def get_all_stock_tickers(self, max_tick=1e10, use_cache=False):
@@ -99,8 +99,13 @@ class APIClient():
                 break
             page += 1
             args['page'] = page
-        
+
         return ticker_list
+
+    def get_relevant_stock_tickers(self, ticker, use_cache=True):
+        all_tickers = self.get_all_stock_tickers(use_cache=use_cache)
+        lng = len(ticker)
+        return [x for x in all_tickers if x[:lng] == ticker][:20]
 
     # Returns true if the ticker is an actual stock ticker
     def is_a_stock_ticker(self, ticker, use_cache=True):
@@ -139,7 +144,7 @@ class APIClient():
                 break
             page += 1
             args['page'] = page
-        
+
         return result_list
 
     # Returns relevant details about a company/entity from its ticker from the API
@@ -171,5 +176,3 @@ if __name__ == '__main__':
         # ticks = my_client.get_all_stock_tickers(max_tick=2000)
 
         # my_client.write(my_client.get_all_stock_tickers)
-
-    
