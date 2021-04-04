@@ -71,8 +71,8 @@ export default {
         searching: false
 
     }
-},
-methods: {
+  },
+  methods: {
         async getStockData(stock) {
           this.searching = true
           var url = 'http://127.0.0.1:5000/lookup/stock?stock=' + stock
@@ -92,17 +92,17 @@ methods: {
             this.tickerOptions = gObject.data;
             this.isFetching = false
         }
-    },
-    mounted () {
+  },
+  mounted () {
       // this.getStockList()
-},
-watch:{
-  value: function(){
+  },
+  watch:{
+    value: function(){
       this.getStockList()
 
-  }
+    }
 
-},
+  },
 // created: async function(){
 //         const gResponse = await fetch("http://127.0.0.1:5000/lookup?stock=App");
 //         const gObject = await gResponse.json();

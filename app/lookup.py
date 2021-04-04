@@ -21,14 +21,14 @@ def stockLookup():
     return json.dumps(data)
 
 # /lookup/autocomoplete
-# Returns json data with list of first 20 tickers to match substring stock
+# Returns json data with list of tickers that match substring stock
 @bp.route("/autocomplete")
 def stockList():
     stock = request.args.get('stock')
     client = APIClient()
     tickers = client.get_relevant_stock_tickers(stock)
 
-    if len(tickers) <= 5:
+    if len(stock) > 6:
         name_search = client.seach_for_ticker(stock, max_tick=20)
         tickers.extend([x['ticker'] for x in name_search if x['ticker'] not in tickers])
 
