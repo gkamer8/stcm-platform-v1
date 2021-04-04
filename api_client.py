@@ -15,6 +15,8 @@ If we ever wanted to switch in the future, the functions that are here should be
 but their implementations will change (except maybe for certain functions like query()
 and makeUrl())
 
+Polygon API docs: https://polygon.io/docs/getting-started
+
 
 """
 
@@ -26,8 +28,12 @@ BASE_URL = 'https://api.polygon.io'
 def query(url):
     if DEBUG:
         print('Querying: ' + url)
-    req = requests.get(url)
-    return json.loads(req.text)
+    try:
+        req = requests.get(url)
+        return json.loads(req.text)
+    except:
+        print("Something went wrong querying for URL: " + str(url))
+        return None
 
 
 class APIClient():
@@ -81,10 +87,14 @@ class APIClient():
         ticker_list = []
         while True:
             res = query(self.makeUrl(path, args))
-            count = res['count']
-            
-            ticker_list.extend([x['ticker'] for x in res['tickers']])
-            
+            try:
+                count = res['count']
+                
+                ticker_list.extend([x['ticker'] for x in res['tickers']])
+            except:
+                print("Something went wrong in get_all_stock_tickers.")
+                break
+
             if count <= perpage * page or max_tick <= perpage * page:
                 break
             page += 1
@@ -97,7 +107,7 @@ class APIClient():
         all_tickers = self.get_all_stock_tickers(use_cache=use_cache)
         return ticker.upper() in all_tickers
     
-    # Searches the API for a ticker
+    # Searches the API for a ticker using a company name
     # Returns list of dictionaries with ticker, name, and exchange
     def seach_for_ticker(self, search, max_tick=1e10, start_page=1):
         page = start_page
@@ -112,14 +122,18 @@ class APIClient():
         result_list = []
         while True:
             res = query(self.makeUrl(path, args))
-            count = res['count']
-            
-            result_list.extend([
-                                {
-                                    'ticker': x['ticker'],
-                                    'name': x['name'],
-                                    'exchange': x['primaryExch']
-                                } for x in res['tickers']])
+            try:
+                count = res['count']
+                
+                result_list.extend([
+                                    {
+                                        'ticker': x['ticker'],
+                                        'name': x['name'],
+                                        'exchange': x['primaryExch']
+                                    } for x in res['tickers']])
+            except:
+                print("Something went wrong in search_for_ticker.")
+                break
             
             if count <= perpage * page or max_tick <= perpage * page:
                 break
@@ -127,6 +141,28 @@ class APIClient():
             args['page'] = page
         
         return result_list
+
+    # Returns relevant details about a company/entity from its ticker from the API
+    # logo, country, industry, sector, url, description, name, symbol, tags, similar
+    def get_ticker_details(self, ticker):
+        path = "v1/meta/symbols/" + ticker.upper() + "/company"
+        args = {}
+        res = query(self.makeUrl(path, args))
+        new_res = {
+            'logo': res['logo'],
+            'country': res['country'],
+            'industry': res['industry'],
+            'sector': res['sector'],
+            'url': res['url'],
+            'description': res['description'],
+            'name': res['name'],
+            'symbol': res['symbol'],
+            'tags': res['tags'],
+            'similar': res['similar']
+        }
+        return new_res
+
+
 
 if __name__ == '__main__':
     if DEBUG:
