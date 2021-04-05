@@ -56,8 +56,8 @@ def decode_auth_token(auth_token):
 @bp.route("/register", methods=('GET', 'POST'))
 def register():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+        username = request.json['username']
+        password = request.json['password']
         db = get_db()
         error = None
 
@@ -87,8 +87,8 @@ def register():
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+        username = request.json['username']
+        password = request.json['password']
         db = get_db()
         error = None
         user = db.execute(
