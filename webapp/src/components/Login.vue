@@ -21,7 +21,8 @@
         data() {
             return {
                 username: '',
-                password: ''
+                password: '',
+                auth: this.$root.$data
             }
         },
         methods: {
@@ -40,6 +41,15 @@
                 const response = await fetch(request);
                 const data = await response.json();
                 console.log(data)
+                if(data.error == undefined){
+                    this.auth.loggedIn = true
+                    this.auth.authToken = data.auth_token
+                    localStorage.setItem('loggedIn', true)
+                    localStorage.setItem('authToken', data.auth_token)
+                }
+                else{
+                    alert("Login failed.")
+                }
             }
         }
     }

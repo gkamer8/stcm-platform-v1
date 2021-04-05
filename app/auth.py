@@ -111,11 +111,11 @@ def login():
     return json.dumps({'error': 'request must be post'})
 
 
-# Testing to see if decoding works --> this is going to be deleted
+# Get user information
 @bp.route('/userinfo', methods=('GET', 'POST'))
 def userinfo():
-    if request.method == 'GET':
-        auth_token = request.args.get('auth')
+    if request.method == 'POST':
+        auth_token = request.headers['Authentication']
         resp = decode_auth_token(auth_token)
         if not isinstance(resp, str):
             db = get_db()
@@ -123,9 +123,9 @@ def userinfo():
                 'SELECT * FROM user WHERE id = ?', (resp,)
             ).fetchone()
         
-            return json.dumps({'your username: ':user['username']})
+            return json.dumps({'username':user['username']})
         else:
             return json.dumps({'error': resp})
     
-    return json.dumps({'error': 'bruh'})
+    return json.dumps({'error': 'must use POST'})
 

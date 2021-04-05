@@ -3,7 +3,7 @@
     <NavBar></NavBar>
     <br />
     <br />
-    <Login></Login>
+    <Login v-if="!this.$root.$data.loggedIn"></Login>
     <br/>
     <br/>
     <StockSearch></StockSearch>
@@ -36,6 +36,10 @@ export default {
   },
   created() {
     document.title = "STCM";
+    if(localStorage.getItem('loggedIn') != null){
+      this.$root.$data.loggedIn = true;
+      this.$root.$data.authToken = localStorage.getItem('authToken');
+    }
   }
 // created: async function(){
 //         const gResponse = await fetch("http://127.0.0.1:5000/lookup?stock=App");

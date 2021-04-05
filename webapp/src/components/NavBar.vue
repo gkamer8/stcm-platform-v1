@@ -8,19 +8,61 @@
                 >
             </b-navbar-item>
         </template>
-        <!-- <template #start>
-            <b-navbar-item style=" color: white;" href="#">
-                <b> Stock Search </b>
+        <template #end>
+            <b-navbar-item v-if="auth.loggedIn" tag="div">
+                <b-tag type="is-light is-large">
+                  {{ computedUsername }}
+                </b-tag>
+                <b-button v-on:click="logout" type="is-danger is-light" style='margin-left: 20px'>
+                  Logout
+                </b-button>
             </b-navbar-item>
-        </template> -->
+        </template>
     </b-navbar>
 </template>
 
 <script>
 export default {
-  name: 'NavBar',
-  props: {
-  }
+    name: 'NavBar',
+    data() {
+        return {
+            auth: this.$root.$data,
+            username: ""
+        }
+    },
+    computed: {
+        computedUsername: function(){
+          if(!this.auth.loggedIn){
+            return "Not logged in."
+          }
+          this.updateUsername()
+          return this.username
+        }
+    },
+    methods: {
+        updateUsername: async function(){
+          const request = new Request(
+          "http://127.0.0.1:5000/auth/userinfo",
+            {
+                method: "POST",
+                mode: "cors",
+                cache: "default",
+                headers: {'Content-Type': 'application/json', 'Authentication': this.auth.authToken},
+                body: JSON.stringify({})
+            }
+          );
+          const response = await fetch(request);
+          const data = await response.json();
+          this.username = data.username == undefined ? "undef" : data.username
+        },
+        logout: function(){
+          this.$root.$data.loggedIn = false
+          this.$root.$data.authToken = null
+          localStorage.clear()
+        }
+    },
+    props: {
+    }
 }
 </script>
 
