@@ -53,7 +53,6 @@ def decode_auth_token(auth_token):
         return 'Invalid token. Please log in again.'
 
 # /auth/register
-# Returns JSON with basic stock information like name, logo, website, etc.
 @bp.route("/register", methods=('GET', 'POST'))
 def register():
     if request.method == 'POST':
@@ -85,7 +84,6 @@ def register():
 
 
 # /auth/login
-# Returns json data with list of tickers that match substring stock
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
     if request.method == 'POST':
@@ -113,7 +111,7 @@ def login():
     return json.dumps({'error': 'request must be post'})
 
 
-# Testing to see if decoding works
+# Testing to see if decoding works --> this is going to be deleted
 @bp.route('/userinfo', methods=('GET', 'POST'))
 def userinfo():
     if request.method == 'GET':

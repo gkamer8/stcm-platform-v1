@@ -3,6 +3,9 @@
     <NavBar></NavBar>
     <br />
     <br />
+    <Login></Login>
+    <br/>
+    <br/>
     <StockSearch></StockSearch>
   </div>
 </template>
@@ -14,6 +17,7 @@ import Buefy from 'buefy'
 import 'buefy/dist/buefy.css'
 import NavBar from './components/NavBar.vue'
 import StockSearch from './components/StockSearch.vue'
+import Login from './components/Login.vue'
 
 Vue.use(Buefy);
 
@@ -21,7 +25,8 @@ export default {
   name: 'App',
   components: {
     NavBar,
-    StockSearch
+    StockSearch,
+    Login
   },
   data: function(){
     return {
