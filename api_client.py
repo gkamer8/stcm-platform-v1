@@ -186,7 +186,24 @@ class APIClient():
             }
         return new_res
 
-
+    # Returns list of financial reports
+    # Options for report_type: Y, YA, Q, QA, T, TA
+    def get_financials(self, ticker, report_type="", limit=5):
+        # See details: https://polygon.io/docs/get_v2_reference_financials__stocksTicker__anchor
+        # Latest filing is first
+        path = "/v2/reference/financials/" + ticker.upper()
+        args = {
+            'limit': str(limit),
+            'type': report_type,
+            'sort': "-calendarDate"
+        }
+        try:
+            res = query(self.makeUrl(path, args))
+            to_return = res['results']
+        except:
+            print("Something went wrong in get_financials")
+            to_return = []
+        return to_return
 
 if __name__ == '__main__':
     if DEBUG:
