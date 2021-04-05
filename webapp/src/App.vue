@@ -11,7 +11,7 @@
 </template>
 
 <script>
-// import '@mdi/font/css/materialdesignicons.css'
+// import '@mdi/font/cs/materialdesignicons.css'
 import Vue from 'vue'
 import Buefy from 'buefy'
 import 'buefy/dist/buefy.css'
