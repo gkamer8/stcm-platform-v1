@@ -32,9 +32,6 @@ export default {
     },
     computed: {
         computedUsername: function(){
-          if(!this.auth.loggedIn){
-            return "Not logged in."
-          }
           this.updateUsername()
           return this.username
         }
