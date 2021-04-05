@@ -15,6 +15,8 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from api_client import APIClient
 
+# Implementation built using: https://realpython.com/token-based-authentication-with-flask/#user-status-route
+
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 def encode_auth_token(user_id):
@@ -24,7 +26,7 @@ def encode_auth_token(user_id):
     """
     try:
         payload = {
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=5),
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1, seconds=0),
             'iat': datetime.datetime.utcnow(),
             'sub': user_id
         }
@@ -53,7 +55,7 @@ def decode_auth_token(auth_token):
 # /auth/register
 # Returns JSON with basic stock information like name, logo, website, etc.
 @bp.route("/register", methods=('GET', 'POST'))
-def stockLookup():
+def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -109,3 +111,23 @@ def login():
         return json.dumps({'error': error})
 
     return json.dumps({'error': 'request must be post'})
+
+
+# Testing to see if decoding works
+@bp.route('/userinfo', methods=('GET', 'POST'))
+def userinfo():
+    if request.method == 'GET':
+        auth_token = request.args.get('auth')
+        resp = decode_auth_token(auth_token)
+        if not isinstance(resp, str):
+            db = get_db()
+            user = db.execute(
+                'SELECT * FROM user WHERE id = ?', (resp,)
+            ).fetchone()
+        
+            return json.dumps({'your username: ':user['username']})
+        else:
+            return json.dumps({'error': resp})
+    
+    return json.dumps({'error': 'bruh'})
+
