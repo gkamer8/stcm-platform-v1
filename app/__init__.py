@@ -46,7 +46,7 @@ def create_app(test_config=None):
     CORS(app)
     app.config.from_mapping(
         SECRET_KEY='dev',  # should be overwritten with something random in deployment
-        # DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
+        DATABASE=os.path.join(app.instance_path, 'app.sqlite'),
     )
 
     if test_config is None:
@@ -69,5 +69,8 @@ def create_app(test_config=None):
     # /lookup --> Handles searching for stocks
     from . import lookup
     app.register_blueprint(lookup.bp)
+
+    from . import db
+    db.init_app(app)
 
     return app
