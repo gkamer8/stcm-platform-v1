@@ -8,7 +8,7 @@ from flask import (
 
 from api_client import APIClient
 
-bp = Blueprint('auth', __name__, url_prefix='/lookup')
+bp = Blueprint('lookup', __name__, url_prefix='/lookup')
 
 # /lookup/stock
 # Returns JSON with basic stock information like name, logo, website, etc.
