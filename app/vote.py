@@ -144,3 +144,70 @@ def decisions():
         return json.dumps({'data': to_return})
 
     return json.dumps({'error': 'must use POST'})
+
+# Returns votes for decisions
+# /vote/votes
+@bp.route("/votes", methods=('GET', 'POST'))
+def votes():
+    if request.method == 'POST':
+        auth_token = request.headers['Authentication']
+        resp = decode_auth_token(auth_token)
+        if not isinstance(resp, str):
+            db = get_db()
+            user = db.execute(
+                'SELECT * FROM user WHERE id = ?', (resp,)
+            ).fetchone()
+        else:
+            return json.dumps({'error': resp})
+        
+        # Takes: optionally list of decisionids, optionally allusers=False
+        try:
+            decisions = request.json['decisions']
+        except:
+            decisions = None
+
+        try:
+            allusers = request.json['allusers']
+        except:
+            allusers = False
+
+            # result_set = c.execute('SELECT * FROM distro WHERE id IN (%s)' %
+                  #         ','.join('?'*len(desired_ids)), desired_ids)
+    
+        if decisions is not None:
+            if not isinstance(decisions, list) or len(decisions) == 0:
+                return json.dumps({'error': 'must supply valid decision list'})
+            if not isinstance(decisions[0], int):
+                return json.dumps({'error': 'must supply valid decision ids'})
+        
+        if allusers and decisions is not None:
+            thevotes = db.execute(
+                            'SELECT id, userid, for, date FROM votes WHERE decisionid IN (%s)' % ','.join('?'*len(decisions)), decisions
+                        )
+        elif allusers and decisions is None:
+            thevotes = db.execute(
+                            'SELECT id, userid, for, date FROM votes'
+                        )
+        elif decisions is not None:
+            desis = [user['id']].extend(decisions)
+            thevotes = db.execute(
+                            'SELECT id, userid, for, date FROM votes WHERE userid = ? AND decisionid IN (%s)' % ','.join('?'*len(decisions)), desis
+                        )
+        else:
+            thevotes = db.execute(
+                            'SELECT id, userid, for, date FROM votes WHERE userid = ?', (user['id'],)
+                        )
+
+        to_return = []
+        for row in thevotes:
+            to_add = {
+                'id': row[0],
+                'userid': row[1],
+                'for': row[2],
+                'date': row[3],
+            }
+            to_return.append(to_add)
+
+        return json.dumps({'data': to_return})
+
+    return json.dumps({'error': 'must use POST'})
