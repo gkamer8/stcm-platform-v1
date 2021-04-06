@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS user;
-DROP TABLE IF EXISTS post;
+DROP TABLE IF EXISTS votes;
+DROP TABLE IF EXISTS decisions;
 
 CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -8,6 +9,31 @@ CREATE TABLE user (
   email TEXT NOT NULL,
   name TEXT NOT NULL,
   admin BOOL
+);
+
+/*
+
+Notes:
+- Time is stored as integer seconds since unix epoch
+- Passed should be initalized as 0
+
+*/
+
+CREATE TABLE decisions (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  description TEXT,
+  date INTEGER NOT NULL,
+  title TEXT NOT NULL,
+  passed BOOL NOT NULL,
+  userid INTEGER NOT NULL
+);
+
+CREATE TABLE votes (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  decisionid INTEGER NOT NULL,
+  for BOOL NOT NULL,
+  userid ID NOT NULL,
+  date INTEGER NOT NULL
 );
 
 /*
