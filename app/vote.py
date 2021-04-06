@@ -20,6 +20,8 @@ from api_client import APIClient
 
 bp = Blueprint('vote', __name__, url_prefix='/vote')
 
+# TODO: Make the server update the "passed" variable after each vote is cast
+
 # /vote/cast
 @bp.route("/cast", methods=('GET', 'POST'))
 def cast():
@@ -102,3 +104,43 @@ def create():
     
     return json.dumps({'error': 'must use POST'})
 
+
+# Returns list of all decisions since a particular date
+# /vote/decisions
+@bp.route("/decisions", methods=('GET', 'POST'))
+def decisions():
+    if request.method == 'POST':
+        auth_token = request.headers['Authentication']
+        resp = decode_auth_token(auth_token)
+        if not isinstance(resp, str):
+            db = get_db()
+            user = db.execute(
+                'SELECT * FROM user WHERE id = ?', (resp,)
+            ).fetchone()
+        else:
+            return json.dumps({'error': resp})
+        
+        try:
+            date = request.json['date']
+        except:
+            date = 0
+
+        decisions = db.execute(
+                        'SELECT id, description, title, userid, passed, date FROM decisions WHERE date >= ?', (date,)
+                    )
+        
+        to_return = []
+        for row in decisions:
+            to_add = {
+                'id': row[0],
+                'description': row[1],
+                'title': row[2],
+                'userid': row[3],
+                'passed': row[4],
+                'date': row[5]
+            }
+            to_return.append(to_add)
+
+        return json.dumps({'data': to_return})
+
+    return json.dumps({'error': 'must use POST'})

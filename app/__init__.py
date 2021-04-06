@@ -74,6 +74,10 @@ def create_app(test_config=None):
     from . import auth
     app.register_blueprint(auth.bp)
 
+    # /vote --> Handles calls to voting on decisions / getting decisions
+    from . import vote
+    app.register_blueprint(vote.bp)
+
     from . import db
     db.init_app(app)
 

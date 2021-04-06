@@ -54,3 +54,17 @@ VALUES ('jsimpson', 'pbkdf2:sha256:150000$ifdeTFcz$7925d81c44ff050eae36af7d2ed0d
 
 INSERT INTO user (username, password, email, name, admin)
 VALUES ('apetty', 'pbkdf2:sha256:150000$8DCzJskO$a1444a9797c7ed9d02e214f10a8edbeb394373fb4ea76178ac7ef8896bfedbb8', 'alexpetty@college.harvard.edu', 'Alex Petty', 1);
+
+/* Decisions */
+
+INSERT INTO decisions (description, date, title, passed, userid)
+VALUES ('Purchase 5 shares of Gamestop', 617683682, 'Buy 5 GME', 0, 0);
+
+INSERT INTO decisions (description, date, title, passed, userid)
+VALUES ('Admit Dean Farris as a partner with the title squirt analyst.', 1617683682, 'Admit Dean Farris', 0, 0);
+
+INSERT INTO decisions (description, date, title, passed, userid)
+VALUES ('Sell 5 shares of Callaway at around $500', 1617083682, 'Sell 5 ELY', 0, 0);
+
+INSERT INTO decisions (description, date, title, passed, userid)
+VALUES ('Purchase 2 shares of AMC due to its enormous potential as a shit post stock.', 1417683682, 'Buy 2 AMC', 0, 0);
