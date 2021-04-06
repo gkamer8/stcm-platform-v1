@@ -56,6 +56,7 @@ export default {
           this.$root.$data.loggedIn = false
           this.$root.$data.authToken = null
           localStorage.clear()
+          this.$router.push({ path: '/login' })
         }
     },
     props: {

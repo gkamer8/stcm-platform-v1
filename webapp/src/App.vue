@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <NavBar></NavBar>
+    <br/>
     <main style="padding-top: 30px;" class="site__content mt-5">
         <router-view></router-view>
     </main>
@@ -37,6 +38,9 @@ export default {
       this.$root.$data.loggedIn = true;
       this.$root.$data.authToken = localStorage.getItem('authToken');
     }
+    else{
+      this.$router.push({ path: '/login' })
+    }
   }
 // created: async function(){
 //         const gResponse = await fetch("http://127.0.0.1:5000/lookup?stock=App");
@@ -62,6 +66,7 @@ $colors: (
 @import "~buefy/src/scss/buefy";
 
 </style>
+
 
 <style>
 #app {
