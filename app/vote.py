@@ -182,31 +182,32 @@ def votes():
         
         if allusers and decisions is not None:
             thevotes = db.execute(
-                            'SELECT id, userid, for, date FROM votes WHERE decisionid IN (%s)' % ','.join('?'*len(decisions)), decisions
+                            'SELECT id, userid, for, date, decisionid FROM votes WHERE decisionid IN (%s) ORDER BY date DESC' % ','.join('?'*len(decisions)), decisions
                         )
         elif allusers and decisions is None:
             thevotes = db.execute(
-                            'SELECT id, userid, for, date FROM votes'
+                            'SELECT id, userid, for, date, decisionid FROM votes ORDER BY date DESC'
                         )
         elif decisions is not None:
             desis = [user['id']].extend(decisions)
             thevotes = db.execute(
-                            'SELECT id, userid, for, date FROM votes WHERE userid = ? AND decisionid IN (%s)' % ','.join('?'*len(decisions)), desis
+                            'SELECT id, userid, for, date, decisionid FROM votes WHERE userid = ? AND decisionid IN (%s) ORDER BY date DESC' % ','.join('?'*len(decisions)), desis
                         )
         else:
             thevotes = db.execute(
-                            'SELECT id, userid, for, date FROM votes WHERE userid = ?', (user['id'],)
+                            'SELECT id, userid, for, date, decisionid FROM votes WHERE userid = ? ORDER BY date DESC', (user['id'],)
                         )
 
-        to_return = []
+        to_return = {}
         for row in thevotes:
             to_add = {
                 'id': row[0],
                 'userid': row[1],
                 'for': row[2],
                 'date': row[3],
+                'decisionid': row[4]
             }
-            to_return.append(to_add)
+            to_return[row[4]] = to_add
 
         return json.dumps({'data': to_return})
 
