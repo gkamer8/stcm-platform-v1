@@ -1,38 +1,30 @@
 <template>
   <div id="app">
     <NavBar></NavBar>
-    <br />
-    <br />
-    <Login v-if="!this.$root.$data.loggedIn"></Login>
     <br/>
-    <br/>
-    <StockSearch></StockSearch>
-    <br/>
-    <br/>
-    <StockView></StockView>
+    <main style="padding-top: 30px;" class="site__content mt-5">
+        <router-view></router-view>
+    </main>
   </div>
 </template>
 
+
+<!-- <script src="https://unpkg.com/ionicons@5.1.2/dist/ionicons.js"></script> -->
 <script>
 // import '@mdi/font/css/materialdesignicons.css'
 import Vue from 'vue'
 import Buefy from 'buefy'
 import 'buefy/dist/buefy.css'
 import NavBar from './components/NavBar.vue'
-import StockSearch from './components/StockSearch.vue'
-import Login from './components/Login.vue'
-import StockView from './components/StockView.vue'
-
+import '@mdi/font/css/materialdesignicons.css'
+// import VueRouter from 'vue-router'
 
 Vue.use(Buefy);
 
 export default {
   name: 'App',
   components: {
-    NavBar,
-    StockSearch,
-    Login,
-    StockView
+    NavBar
   },
   data: function(){
     return {
@@ -46,6 +38,9 @@ export default {
       this.$root.$data.loggedIn = true;
       this.$root.$data.authToken = localStorage.getItem('authToken');
     }
+    else{
+      this.$router.push({ path: '/login' })
+    }
   }
 // created: async function(){
 //         const gResponse = await fetch("http://127.0.0.1:5000/lookup?stock=App");
@@ -54,6 +49,24 @@ export default {
 // }
 }
 </script>
+
+<style lang="scss">
+@import "~bulma/sass/utilities/_all";
+$stcm: rgb(165, 28, 48);
+$stcm-invert: findColorInvert($stcm);
+
+
+$colors: (
+    "primary": ($stcm, $stcm-invert),
+
+);
+
+// Import Bulma and Buefy styles
+@import "~bulma";
+@import "~buefy/src/scss/buefy";
+
+</style>
+
 
 <style>
 #app {

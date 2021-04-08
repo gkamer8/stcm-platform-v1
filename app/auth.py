@@ -58,6 +58,10 @@ def register():
     if request.method == 'POST':
         username = request.json['username']
         password = request.json['password']
+        email = request.json['email']
+        name = request.json['name']
+        admin = request.json['admin']
+
         db = get_db()
         error = None
 
@@ -65,6 +69,12 @@ def register():
             error = 'Username is required.'
         elif not password:
             error = 'Password is required.'
+        elif not email:
+            error = 'Email is required.'
+        elif not name:
+            error = 'Name is required.'
+        elif admin != 0 and admin != 1:
+            error = 'Admin parameter invalid.'
         elif db.execute(
             'SELECT id FROM user WHERE username = ?', (username,)
         ).fetchone() is not None:
@@ -72,8 +82,8 @@ def register():
 
         if error is None:
             db.execute(
-                'INSERT INTO user (username, password) VALUES (?, ?)',
-                (username, generate_password_hash(password))
+                'INSERT INTO user (username, password, email, name, admin) VALUES (?, ?, ?, ?, ?)',
+                (username, generate_password_hash(password), email, name, admin)
             )
             db.commit()
             return json.dumps({'message': 'success'})
