@@ -59,6 +59,9 @@
                   this.wrongPassword = true
                 }
             }
+        },
+        created() {
+
         }
     }
 </script>
