@@ -11,7 +11,7 @@
 
 <!-- <script src="https://unpkg.com/ionicons@5.1.2/dist/ionicons.js"></script> -->
 <script>
-// import '@mdi/font/cs/materialdesignicons.css'
+// import '@mdi/font/css/materialdesignicons.css'
 import Vue from 'vue'
 import Buefy from 'buefy'
 import 'buefy/dist/buefy.css'

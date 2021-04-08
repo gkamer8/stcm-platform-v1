@@ -1,6 +1,6 @@
 <template>
     <div class="box" style="width: 60%; margin: auto;">
-      <p class="is-size-3" style="padding-bottom: 2rem"> Stock Summary</p>
+      <p class="is-size-3" style="padding-bottom: 2rem"> Search a Stock</p>
       <div v-if="searching">
         <div class="container" style="height: 80px;">
           <b-field>
