@@ -7,17 +7,22 @@
     <br/>
     <br/>
     <StockSearch></StockSearch>
+    <br/>
+    <br/>
+    <StockView></StockView>
   </div>
 </template>
 
 <script>
-// import '@mdi/font/cs/materialdesignicons.css'
+// import '@mdi/font/css/materialdesignicons.css'
 import Vue from 'vue'
 import Buefy from 'buefy'
 import 'buefy/dist/buefy.css'
 import NavBar from './components/NavBar.vue'
 import StockSearch from './components/StockSearch.vue'
 import Login from './components/Login.vue'
+import StockView from './components/StockView.vue'
+
 
 Vue.use(Buefy);
 
@@ -26,7 +31,8 @@ export default {
   components: {
     NavBar,
     StockSearch,
-    Login
+    Login,
+    StockView
   },
   data: function(){
     return {
