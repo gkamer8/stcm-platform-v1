@@ -10,9 +10,9 @@
         </template>
         <template #end>
             <b-navbar-item v-if="auth.loggedIn" tag="div">
-                <b-tag type="is-light is-large">
+                <b-button v-on:click="goToUser" type="is-light">
                   {{ computedUsername }}
-                </b-tag>
+                </b-button>
                 <b-button v-on:click="logout" type="is-danger is-light" style='margin-left: 20px'>
                   Logout
                 </b-button>
@@ -57,6 +57,9 @@ export default {
           this.$root.$data.authToken = null
           localStorage.clear()
           this.$router.push({ path: '/login' })
+        },
+        goToUser: function(){
+          this.$router.push({ path: '/user' })
         }
     },
     props: {

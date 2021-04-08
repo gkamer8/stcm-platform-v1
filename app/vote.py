@@ -87,6 +87,7 @@ def create():
         description = request.json['description']
         title = request.json['title']
 
+        error = None
         if not description:
             error = 'Description is required.'
         elif not title:

@@ -1,5 +1,5 @@
 <template>
-    <section style='width: 40%; margin: auto'>
+    <section>
 
         <b-table :data='data'
             :opened-detailed="defaultOpenedDetails"

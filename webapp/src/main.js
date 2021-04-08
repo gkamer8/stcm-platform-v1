@@ -3,7 +3,7 @@ import App from './App.vue'
 import VueRouter from 'vue-router'
 import Login from './components/Login.vue'
 import StockSearch from './components/StockSearch.vue'
-import Voting from './components/Voting.vue'
+import User from './components/User.vue'
 
 Vue.use(VueRouter)
 
@@ -11,7 +11,7 @@ const routes = [
   { path: '', redirect: '/login'},
   { path: '/login', component: Login, name: Login},
   { path: '/search', component: StockSearch, name: StockSearch},
-  { path: '/voting', component: Voting, name: Voting},
+  { path: '/user', component: User, name: User},
   { path: '*', redirect: '/login'}
 ]
 
@@ -23,7 +23,7 @@ const router = new VueRouter({
   scrollBehavior () {
 
     return { x: 0, y: 0 }
-}
+  }
 })
 
 var sourceOfTruth = {
