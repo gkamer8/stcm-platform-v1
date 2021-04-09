@@ -63,6 +63,18 @@ def cast():
                 (decisionid, forvote, user['id'], int(time.time()))
             )
             db.commit()
+
+            # Check if passed
+            usersfor = db.execute(
+                'SELECT stake FROM user WHERE id IN (SELECT userid FROM votes WHERE for != 0 AND decisionid = ?)', (decisionid,)
+            )
+            cumstakefor = 0
+            for row in usersfor:
+                cumstakefor += row[0]
+                if cumstakefor > (2/3):
+                    db.execute('UPDATE decisions SET passed = 1 WHERE id = ?', (decisionid,))
+                    db.commit()
+
             return json.dumps({'message': 'success'})
 
         return json.dumps({'error': error})
