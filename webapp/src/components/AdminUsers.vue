@@ -37,7 +37,34 @@
                 Registration Failed: {{ errorMessage }}
             </b-message>
         </div>
+        <hr/>
+        <div id="edit">
+            <div class='columns'>
+                <div class="column">
+                    <b-input type="number" v-model="editid" style="width:65px" placeholder="ID"></b-input>
+                </div>
+                <div class="column">
+                    <b-select v-model="editfield" placeholder="Field">
+                        <option value="name">Name</option>
+                        <option value="username">Username</option>
+                        <option value="password">Password</option>
+                        <option value="admin">Admin</option>
+                        <option value="email">Email</option>
+                        <option value="stake">Stake</option>
+                    </b-select>
+                </div>
+                <div class="column is-half">
+                    <b-input v-model="editvalue" placeholder="Value"></b-input>
+                </div>
+                <div class="column">
+                    <b-button @click="sendEdit" is-primary>Edit</b-button>
+                </div>
+            </div>
+        </div>
         <br/>
+        <b-message v-if="editFail" type="is-danger" aria-close-label="Close message">
+            Editing Failed: {{ errorMessage }}
+        </b-message>
         <b-table :data='data'
             default-sort="stake"
             default-sort-direction="desc">
@@ -62,6 +89,10 @@
                 {{ props.row.email }}
             </b-table-column>
 
+            <b-table-column field="delete" label="Delete" width="10" :td-attrs="columnTdAttrs" v-slot="props">
+                <b-icon icon="delete" v-on:click.native="delUser(props.row.id)" v-bind:style="{cursor:'pointer'}" type="is-danger"></b-icon>
+            </b-table-column>
+
             <template #detail="props">
                 {{ props.row.description }}
             </template>
@@ -84,6 +115,10 @@
                 email: "",
                 stake: "",
                 admin: "",
+                editfield: "",
+                editid: "",
+                editvalue: "",
+                editFail: false
             }
         },
         methods: {
@@ -126,10 +161,57 @@
                 }
                 else{
                     this.regFail = false;
-                    this.$router.go();
+                    this.getUsers()
                 }
 
                 console.log(this.data)
+            },
+            async sendEdit(){
+                const request = new Request(
+                "http://127.0.0.1:5000/auth/edit",
+                    {
+                        method: "POST",
+                        mode: "cors",
+                        cache: "default",
+                        headers: {'Content-Type': 'application/json', 'Authentication': this.auth.authToken},
+                        body: JSON.stringify({'value':this.editvalue, 'id':this.editid, 'field':this.editfield})
+                    }
+                );
+                const response = await fetch(request);
+                const data = await response.json();
+
+                if(data.error != undefined){
+                    this.errorMessage = data['error']
+                    this.editFail = true;
+                    console.log("ERROR")
+                }
+                else{
+                    this.editFail = false
+                    this.getUsers()
+                }
+            },
+            async delUser(userid){
+                const request = new Request(
+                "http://127.0.0.1:5000/auth/delete",
+                    {
+                        method: "POST",
+                        mode: "cors",
+                        cache: "default",
+                        headers: {'Content-Type': 'application/json', 'Authentication': this.auth.authToken},
+                        body: JSON.stringify({'userid':userid})
+                    }
+                );
+                const response = await fetch(request);
+                const data = await response.json();
+
+                if(data.error != undefined){
+                    this.errorMessage = data['error']
+                    this.editFail = true;
+                }
+                else{
+                    this.editFail = false
+                    this.getUsers()
+                }
             }
         },
         created() {

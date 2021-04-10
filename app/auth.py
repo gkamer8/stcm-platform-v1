@@ -198,3 +198,80 @@ def changeinfo():
         return json.dumps({'message':'success'})
 
     return json.dumps({'error': 'must use POST'})
+
+
+@bp.route('/edit', methods=('GET', 'POST'))
+def edit():
+    if request.method == 'POST':
+        auth_token = request.headers['Authentication']
+        resp = decode_auth_token(auth_token)
+        if not isinstance(resp, str):
+            db = get_db()
+            user = db.execute(
+                'SELECT * FROM user WHERE id = ?', (resp,)
+            ).fetchone()
+
+            if user['admin'] == 0:
+                return json.dumps({'error':'Must be admin'})
+
+        else:
+            return json.dumps({'error': resp})
+        
+        userid = request.json['id']
+        field = request.json['field']
+        value = request.json['value']
+
+        if not value:
+            return json.dumps({'error':'value cannot be empty'})
+
+        if field == "username":
+            db.execute('UPDATE user SET username = ? WHERE id = ?', (value, userid))
+            db.commit()
+        elif field == "name":
+            db.execute('UPDATE user SET name = ? WHERE id = ?', (value, userid))
+            db.commit()
+        elif field == "password":
+            db.execute('UPDATE user SET password = ? WHERE id = ?', (generate_password_hash(value), userid))
+            db.commit()
+        elif field == "email":
+            db.execute('UPDATE user SET email = ? WHERE id = ?', (value, userid))
+            db.commit()
+        elif field == "admin":
+            db.execute('UPDATE user SET admin = ? WHERE id = ?', (value, userid))
+            db.commit()
+        elif field == "stake":
+            db.execute('UPDATE user SET stake = ? WHERE id = ?', (value, userid))
+            db.commit()
+        else:
+            return json.dumps({'error':'invalid field'})
+
+        return json.dumps({'message':'success'})
+
+    return json.dumps({'error': 'must use POST'})
+
+@bp.route('/delete', methods=('GET', 'POST'))
+def delete():
+    if request.method == 'POST':
+        auth_token = request.headers['Authentication']
+        resp = decode_auth_token(auth_token)
+        if not isinstance(resp, str):
+            db = get_db()
+            user = db.execute(
+                'SELECT * FROM user WHERE id = ?', (resp,)
+            ).fetchone()
+
+            if user['admin'] == 0:
+                return json.dumps({'error':'Must be admin'})
+
+        else:
+            return json.dumps({'error': resp})
+        
+        userid = request.json['userid']
+
+        db.execute('DELETE FROM user WHERE id = ?', (userid,))
+        db.commit()
+
+        return json.dumps({'message':'success'})
+
+
+    return json.dumps({'error': 'must use POST'})
