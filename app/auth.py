@@ -136,7 +136,7 @@ def userinfo():
                 'SELECT * FROM user WHERE id = ?', (resp,)
             ).fetchone()
         
-            return json.dumps({'username':user['username'], 'admin':user['admin']})
+            return json.dumps({'username':user['username'], 'admin':user['admin'], 'email':user['email'], 'name':user['name']})
         else:
             return json.dumps({'error': resp})
     
@@ -153,9 +153,6 @@ def allusers():
             user = db.execute(
                 'SELECT * FROM user WHERE id = ?', (resp,)
             ).fetchone()
-
-            if user['admin'] == 0:
-                return json.dumps({'username':user['username'], 'admin':user['admin']})
 
         else:
             return json.dumps({'error': resp})
@@ -176,3 +173,28 @@ def allusers():
     
     return json.dumps({'error': 'must use POST'})
 
+@bp.route('/changeinfo', methods=('GET', 'POST'))
+def changeinfo():
+    if request.method == 'POST':
+        auth_token = request.headers['Authentication']
+        resp = decode_auth_token(auth_token)
+        if not isinstance(resp, str):
+            db = get_db()
+            user = db.execute(
+                'SELECT * FROM user WHERE id = ?', (resp,)
+            ).fetchone()
+
+        else:
+            return json.dumps({'error': resp})
+        
+        username = request.json['username']
+        password = generate_password_hash(request.json['password'])
+        name = request.json['name']
+        email = request.json['email']
+
+        db.execute('UPDATE user SET username = ?, name = ?, password = ?, email = ? WHERE id = ?', (username, name, password, email, user['id']))
+        db.commit()
+
+        return json.dumps({'message':'success'})
+
+    return json.dumps({'error': 'must use POST'})

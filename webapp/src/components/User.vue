@@ -15,11 +15,10 @@
             </b-menu-item>
             <b-menu-item icon="account" label="My Account">
               <b-menu-item label="Change Info" @click="setMidChangeinfo"></b-menu-item>
-              <b-menu-item label="Addresses"></b-menu-item>
             </b-menu-item>
           </b-menu-list>
           <b-menu-list>
-            <b-menu-item label="Expo" icon="link" tag="router-link" target="_blank" to="/expo"></b-menu-item>
+            <b-menu-item label="Roster" icon="account-group" @click="setMidRoster"></b-menu-item>
           </b-menu-list>
           <b-menu-list label="Actions">
             <b-menu-item label="Logout" @click="logout"></b-menu-item>
@@ -30,7 +29,7 @@
     <div class="column"></div>
     <div class="column is-half">
       <div v-if="midCol=='changeinfo'">
-        Change info
+        <ChangeInfo></ChangeInfo>
       </div>
       <div v-if="midCol=='decisions'" v-bind:class="{decisionPanel: true}">
         <h1 v-bind:class="{'title is-4': true}" style='float:left'>Administrator - Create Decision</h1>
@@ -47,6 +46,10 @@
         <h1 class="title">Partners</h1>
         <AdminUsers></AdminUsers>
       </div>
+      <div v-if="midCol=='roster'">
+        <h1 class="title">Roster</h1>
+        <Roster></Roster>
+      </div>
     </div>
     <div class="column">
     </div>
@@ -56,9 +59,11 @@
 <script>
 import Voting from './Voting.vue'
 import AdminUsers from './AdminUsers.vue'
+import ChangeInfo from './ChangeInfo.vue'
+import Roster from './Roster.vue'
 
 export default {
-  components: { Voting, AdminUsers },
+  components: { Voting, AdminUsers, ChangeInfo, Roster },
     name: 'User',
     data() {
         return {
@@ -136,6 +141,9 @@ export default {
       },
       setMidChangeinfo(){
         this.midCol = "changeinfo"
+      },
+      setMidRoster(){
+        this.midCol = "roster"
       }
     },
     props: {

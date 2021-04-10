@@ -1,7 +1,7 @@
 <template>
     <b-navbar class="shdw" :fixed-top="true" style="background-color: rgb(165, 28, 48);">
         <template #brand>
-            <b-navbar-item style="margins: 0;" tag="router-link" :to="{ path: '/' }">
+            <b-navbar-item style="margins: 0;" tag="router-link" :to="{ path: '/search' }">
                 <img style="height=4.75rem;"
                     src="logo.png"
                     alt="Lightweight UI components for Vue.js based on Bulma"
@@ -13,7 +13,7 @@
                 <b-button v-on:click="goToUser" type="is-light">
                   {{ computedUsername }}
                 </b-button>
-                <b-button v-on:click="logout" type="is-danger is-light" style='margin-left: 20px'>
+                <b-button v-on:click="logout" type="is-danger is-light" style='margin-left: 20px; margin-right:20px'>
                   Logout
                 </b-button>
             </b-navbar-item>
