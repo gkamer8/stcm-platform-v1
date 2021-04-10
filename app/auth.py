@@ -61,6 +61,7 @@ def register():
         email = request.json['email']
         name = request.json['name']
         admin = request.json['admin']
+        stake = request.json['stake']
 
         db = get_db()
         error = None
@@ -79,11 +80,13 @@ def register():
             'SELECT id FROM user WHERE username = ?', (username,)
         ).fetchone() is not None:
             error = 'User {} is already registered.'.format(username)
+        elif not stake or not isinstance(stake, float) or stake < 0 or stake > 1:
+            error = "Stake required and must be a number between 0 and 1"
 
         if error is None:
             db.execute(
-                'INSERT INTO user (username, password, email, name, admin) VALUES (?, ?, ?, ?, ?)',
-                (username, generate_password_hash(password), email, name, admin)
+                'INSERT INTO user (username, password, email, name, admin, stake) VALUES (?, ?, ?, ?, ?, ?)',
+                (username, generate_password_hash(password), email, name, admin, stake)
             )
             db.commit()
             return json.dumps({'message': 'success'})
@@ -136,6 +139,40 @@ def userinfo():
             return json.dumps({'username':user['username'], 'admin':user['admin']})
         else:
             return json.dumps({'error': resp})
+    
+    return json.dumps({'error': 'must use POST'})
+
+# Get all user information
+@bp.route('/allusers', methods=('GET', 'POST'))
+def allusers():
+    if request.method == 'POST':
+        auth_token = request.headers['Authentication']
+        resp = decode_auth_token(auth_token)
+        if not isinstance(resp, str):
+            db = get_db()
+            user = db.execute(
+                'SELECT * FROM user WHERE id = ?', (resp,)
+            ).fetchone()
+
+            if user['admin'] == 0:
+                return json.dumps({'username':user['username'], 'admin':user['admin']})
+
+        else:
+            return json.dumps({'error': resp})
+        
+        users = db.execute('SELECT * FROM user')
+        
+        data = []
+        for user in users:
+            to_append = {}
+            to_append['id'] = user['id']
+            to_append['username'] = user['username']
+            to_append['name'] = user['name']
+            to_append['stake'] = user['stake']
+            to_append['email'] = user['email']
+            data.append(to_append)
+
+        return json.dumps({'data': data})
     
     return json.dumps({'error': 'must use POST'})
 

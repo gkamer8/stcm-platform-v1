@@ -58,7 +58,6 @@ $stcm-invert: findColorInvert($stcm);
 
 $colors: (
     "primary": ($stcm, $stcm-invert),
-
 );
 
 // Import Bulma and Buefy styles

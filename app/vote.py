@@ -20,8 +20,6 @@ from api_client import APIClient
 
 bp = Blueprint('vote', __name__, url_prefix='/vote')
 
-# TODO: Make the server update the "passed" variable after each vote is cast
-
 # /vote/cast
 @bp.route("/cast", methods=('GET', 'POST'))
 def cast():
