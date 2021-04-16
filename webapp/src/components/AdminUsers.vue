@@ -89,7 +89,7 @@
                 {{ props.row.email }}
             </b-table-column>
 
-            <b-table-column field="delete" label="Delete" width="10" :td-attrs="columnTdAttrs" v-slot="props">
+            <b-table-column field="delete" label="" style="text-align:center" width="10" :td-attrs="columnTdAttrs" v-slot="props">
                 <b-icon icon="delete" v-on:click.native="delUser(props.row.id)" v-bind:style="{cursor:'pointer'}" type="is-danger"></b-icon>
             </b-table-column>
 
