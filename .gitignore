@@ -1,6 +1,9 @@
 
 # local env files
 api_key.txt
+access_token.txt
+consumer_key.txt
+refresh_token.txt
 .DS_Store
 __pycache__/
 
