@@ -39,7 +39,6 @@
                     {{ props.row.profit.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) }}
                 </b-table-column>
 
-
             </b-table>
         </div>
     </section>
@@ -52,7 +51,8 @@
                 auth: this.$root.$data,
                 data: [],
                 totalValue: "",
-                yourAccount: ""
+                yourAccount: "",
+                showDetailIcon: true,
             }
         },
         methods: {

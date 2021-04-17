@@ -1,6 +1,6 @@
 <template>
   <div class="columns">
-    <div class="column is-one-fifth" id='user-menu'>
+    <div class="column is-one-fourth" id='user-menu'>
       <template>
         <b-menu>
           <b-menu-list label="Menu">
