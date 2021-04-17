@@ -136,7 +136,7 @@ def userinfo():
                 'SELECT * FROM user WHERE id = ?', (resp,)
             ).fetchone()
         
-            return json.dumps({'username':user['username'], 'admin':user['admin'], 'email':user['email'], 'name':user['name']})
+            return json.dumps({'username':user['username'], 'admin':user['admin'], 'email':user['email'], 'stake':user['stake'], 'name':user['name']})
         else:
             return json.dumps({'error': resp})
     

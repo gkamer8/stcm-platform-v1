@@ -37,3 +37,16 @@ def positions():
         to_return.append(pos)
 
     return json.dumps({'data': to_return})
+
+# /fund/positions
+@bp.route('/account', methods=('GET', 'POST'))
+def account():
+    auth_token = request.headers['Authentication']
+    resp = decode_auth_token(auth_token)
+    if isinstance(resp, str):
+        return json.dumps({'error':resp})
+
+    tdclient = TDAPIClient()
+    to_return = tdclient.get_account()
+
+    return json.dumps({'data': to_return})

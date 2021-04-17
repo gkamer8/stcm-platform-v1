@@ -1,9 +1,18 @@
 <template>
     <section>
+        Total Fund Value
+        <h1>
+            {{ this.totalValue.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) }}
+        </h1>
+        <h2>
+            Your Capital Account: {{ this.yourAccount.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) }}
+        </h2>
+        <br/>
         <div id="positions-table">
             <b-table :data='data'
                 :paginated="true"
-                :per-page="25"
+                :per-page="20"
+                default-sort="marketValue"
                 default-sort-direction="desc">
 
                 <b-table-column field="symbol" sortable label="Symbol" width="15" :td-attrs="columnTdAttrs" v-slot="props">
@@ -11,11 +20,11 @@
                 </b-table-column>
 
                 <b-table-column field="marketValue" numeric sortable label="Market Value" :td-attrs="columnTdAttrs" v-slot="props">
-                    {{ "$" + props.row.marketValue.toFixed(2) }}
+                    {{ props.row.marketValue.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) }}
                 </b-table-column>
 
                 <b-table-column field="averagePrice" numeric sortable label="Average Price" :td-attrs="columnTdAttrs" v-slot="props">
-                    {{ "$" + props.row.averagePrice.toFixed(2) }}
+                    {{ props.row.averagePrice.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) }}
                 </b-table-column>
 
                 <b-table-column field="longQuantity" numeric sortable label="Long Quantity" :td-attrs="columnTdAttrs" v-slot="props">
@@ -27,7 +36,7 @@
                 </b-table-column>
 
                 <b-table-column field="profit" sortable numeric label="Profit" :td-attrs="columnTdAttrs" v-slot="props">
-                    {{ "$" + props.row.profit.toFixed(2) }}
+                    {{ props.row.profit.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) }}
                 </b-table-column>
 
 
@@ -42,7 +51,8 @@
             return {
                 auth: this.$root.$data,
                 data: [],
-                dollarFormatter: new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'})
+                totalValue: "",
+                yourAccount: ""
             }
         },
         methods: {
@@ -68,10 +78,44 @@
                 }
 
                 console.log(this.data)
+            },
+            async getTotalValue(){
+                const request = new Request(
+                "http://127.0.0.1:5000/fund/account",
+                    {
+                        method: "POST",
+                        mode: "cors",
+                        cache: "default",
+                        headers: {'Content-Type': 'application/json', 'Authentication': this.auth.authToken},
+                        body: JSON.stringify({})
+                    }
+                );
+                const response = await fetch(request);
+                const data = await response.json();
+                this.totalValue = data.data.liquidationValue
+
+                this.getUserInfo()  // Needs to be called after get total value
+            },
+            async getUserInfo(){
+                const request = new Request(
+                "http://127.0.0.1:5000/auth/userinfo",
+                    {
+                        method: "POST",
+                        mode: "cors",
+                        cache: "default",
+                        headers: {'Content-Type': 'application/json', 'Authentication': this.auth.authToken},
+                        body: JSON.stringify({})
+                    }
+                );
+                const response = await fetch(request);
+                const data = await response.json();
+
+                this.yourAccount = data['stake'] * this.totalValue
             }
         },
         created() {
             if(this.auth.loggedIn){
+                this.getTotalValue()
                 this.getUsers()
             }
             else{
@@ -91,6 +135,10 @@
     width: 75%;
     margin: auto;
     margin-bottom: 250px;
+}
+
+h1{
+    font-size: 50px;
 }
 
 </style>
