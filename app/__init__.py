@@ -78,6 +78,10 @@ def create_app(test_config=None):
     from . import vote
     app.register_blueprint(vote.bp)
 
+    # /fund --> Handles calls to TD api
+    from . import fund
+    app.register_blueprint(fund.bp)
+
     from . import db
     db.init_app(app)
 

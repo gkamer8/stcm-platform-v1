@@ -125,9 +125,6 @@ def decisions():
         resp = decode_auth_token(auth_token)
         if not isinstance(resp, str):
             db = get_db()
-            user = db.execute(
-                'SELECT * FROM user WHERE id = ?', (resp,)
-            ).fetchone()
         else:
             return json.dumps({'error': resp})
         

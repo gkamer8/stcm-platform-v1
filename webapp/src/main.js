@@ -4,6 +4,7 @@ import VueRouter from 'vue-router'
 import Login from './components/Login.vue'
 import StockSearch from './components/StockSearch.vue'
 import User from './components/User.vue'
+import FundInfo from './components/FundInfo.vue'
 
 Vue.use(VueRouter)
 
@@ -12,6 +13,7 @@ const routes = [
   { path: '/login', component: Login, name: Login},
   { path: '/search', component: StockSearch, name: StockSearch},
   { path: '/user', component: User, name: User},
+  { path: '/fund', component: FundInfo, name: FundInfo},
   { path: '*', redirect: '/login'}
 ]
 
