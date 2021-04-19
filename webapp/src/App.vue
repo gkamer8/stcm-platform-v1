@@ -33,12 +33,40 @@ export default {
     }
   },
   created() {
+    this.$root.$data.logOut = this.logOut
     document.title = "STCM";
     if(localStorage.getItem('loggedIn') != null){
-      this.$root.$data.loggedIn = true;
       this.$root.$data.authToken = localStorage.getItem('authToken');
+      this.checkLogin()
     }
     else{
+      this.$root.$data.loggedIn = false;
+      this.$root.$data.authToken = ""
+      this.$router.push({ path: '/login' })
+    }
+  },
+  methods: {
+    checkLogin: async function(){
+      const request = new Request(
+      "http://127.0.0.1:5000/auth/userinfo",
+        {
+            method: "POST",
+            mode: "cors",
+            cache: "default",
+            headers: {'Content-Type': 'application/json', 'Authentication': this.$root.$data.authToken},
+            body: JSON.stringify({})
+        }
+      );
+      const response = await fetch(request);
+      const data = await response.json();
+      if(data.username == undefined){
+        this.logOut()
+      }
+    },
+    logOut: function(){
+      this.$root.$data.loggedIn = false
+      this.$root.$data.authToken = null
+      localStorage.clear()
       this.$router.push({ path: '/login' })
     }
   }

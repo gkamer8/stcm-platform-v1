@@ -27,6 +27,7 @@ export default {
     data() {
         return {
             auth: this.$root.$data,
+            logout: this.$root.$data.logOut,
             username: ""
         }
     },
@@ -51,12 +52,6 @@ export default {
           const response = await fetch(request);
           const data = await response.json();
           this.username = data.username == undefined ? "undef" : data.username
-        },
-        logout: function(){
-          this.$root.$data.loggedIn = false
-          this.$root.$data.authToken = null
-          localStorage.clear()
-          this.$router.push({ path: '/login' })
         },
         goToUser: function(){
           this.$router.push({ path: '/user' })
