@@ -62,6 +62,9 @@ export default {
       if(data.username == undefined){
         this.logOut()
       }
+      else{
+        this.$root.$data.loggedIn = true;
+      }
     },
     logOut: function(){
       this.$root.$data.loggedIn = false

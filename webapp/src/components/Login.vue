@@ -7,7 +7,7 @@
         </b-field>
 
         <b-field>
-            <b-input type="password"
+            <b-input @keyup.enter="sendLogin" type="password"
                 placeholder='Password'
                 password-reveal v-model="password">
             </b-input>
@@ -16,7 +16,7 @@
           Invalid Username or Password
         </b-message>
         <div style=" margin-top: 10px;">
-          <b-button v-on:click="sendLogin" style='background-color:rgb(165, 28, 48);' class="button is-primary" expanded>Login</b-button>
+          <b-button @click="sendLogin" style='background-color:rgb(165, 28, 48);' class="button is-primary" expanded>Login</b-button>
         </div>
 
     </div>
@@ -58,10 +58,15 @@
                 else{
                   this.wrongPassword = true
                 }
+            },
+            handleKeyDown(e) {
+                if(e.code === 'Enter'){
+                    this.sendLogin()
+                }
             }
         },
         created() {
-
+            window.addEventListener("keydown", this.handleKeyDown)
         }
     }
 </script>
